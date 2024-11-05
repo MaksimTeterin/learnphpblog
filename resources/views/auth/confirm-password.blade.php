@@ -1,14 +1,25 @@
-<x-guest-layout>
-    <div class="mb-4 text-sm text-gray-600">
-        {{ __('This is a secure area of the application. Please confirm your password before continuing.') }}
-    </div>
+@extends('partials.layout') <!-- Extends a layout file for consistent design -->
 
-    <form method="POST" action="{{ route('password.confirm') }}">
-        @csrf
+@section('title', 'Login') <!-- Sets the title of the page to 'Login' -->
 
-        <!-- Password -->
-        <div>
-            <x-input-label for="password" :value="__('Password')" />
+@section('content') <!-- Begins the content section for the login page -->
+    <div class="container mx-auto"> <!-- A responsive container centered on the page -->
+        <div class="card bg-base-300 shadow-xl w-1/2 mx-auto"> <!-- Card layout for the form -->
+            <div class="card-body"> <!-- Body of the card -->
+                <form action="{{ route('password.email') }}" method="POST"> <!-- Form for login submission -->
+                    @csrf <!-- CSRF token for security -->
+                    <label class="form-control w-full"> <!-- Label for the email input -->
+                        <div class="label mb-4 text-sm text-white-600"> <!-- Div to group label text -->       
+                        <span>Forgot your password? No problem. Just let us know your email address and we will email you a password reset link that will allow you to choose a new one.</span>
+                        </div>
+                    </label>
+
+                    @csrf <!-- CSRF token for security -->
+                    <label class="form-control w-full"> <!-- Label for the email input -->
+                        <div class="label"> <!-- Div to group label text -->
+                            <span class="label-text">Password</span> <!-- Label text for the email field -->
+                        </div>
+                        <x-input-label for="password" :value="__('Password')" />
 
             <x-text-input id="password" class="block mt-1 w-full"
                             type="password"
@@ -16,12 +27,21 @@
                             required autocomplete="current-password" />
 
             <x-input-error :messages="$errors->get('password')" class="mt-2" />
-        </div>
+                        <div class="label"> <!-- Div to group error messages -->
+                            @error('email') <!-- Check for validation errors on email -->
+                                <span class="label-text-alt text-error">{{ $message }}</span> <!-- Display the error message if present -->
+                            @enderror
+                        </div>
+                    </label>
 
-        <div class="flex justify-end mt-4">
-            <x-primary-button>
-                {{ __('Confirm') }}
-            </x-primary-button>
-        </div>
-    </form>
-</x-guest-layout>
+                      <div class="flex content-center justify-end gap-2"> <!-- Flexbox for aligning buttons and links -->
+                        @if (Route::has('password.request')) <!-- Check if the password reset route exists -->
+                            
+                        @endif
+                        <input type="submit" class="btn btn-primary" value="Email Password Reset Link" /> <!-- Submit button for the login form -->
+                    </div>
+                </form> <!-- End of the form -->
+            </div> <!-- End of card body -->
+        </div> <!-- End of card -->
+    </div> <!-- End of container -->
+@endsection <!-- End of the content section -->

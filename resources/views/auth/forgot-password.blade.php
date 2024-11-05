@@ -1,6 +1,6 @@
 @extends('partials.layout') <!-- Extends a layout file for consistent design -->
 
-@section('title', 'Login') <!-- Sets the title of the page to 'Login' -->
+@section('title', 'Restore Password') <!-- Sets the title of the page to 'Login' -->
 
 @section('content') <!-- Begins the content section for the login page -->
     <div class="container mx-auto"> <!-- A responsive container centered on the page -->
