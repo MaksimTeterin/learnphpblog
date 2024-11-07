@@ -6,41 +6,29 @@
     <div class="container mx-auto"> <!-- A responsive container centered on the page -->
         <div class="card bg-base-300 shadow-xl w-1/2 mx-auto"> <!-- Card layout for the form -->
             <div class="card-body"> <!-- Body of the card -->
-                <form action="{{ route('password.email') }}" method="POST"> <!-- Form for login submission -->
-                    @csrf <!-- CSRF token for security -->
-                    <label class="form-control w-full"> <!-- Label for the email input -->
-                        <div class="label mb-4 text-sm text-white-600"> <!-- Div to group label text -->       
-                        <span>Forgot your password? No problem. Just let us know your email address and we will email you a password reset link that will allow you to choose a new one.</span>
+            <form method="POST" action="{{ route('password.confirm') }}">
+        @csrf
+
+        <!-- Password -->
+        <label class="form-control w-full">
+                        <div class="label">
+                            <span class="label-text">Password</span>
                         </div>
-                    </label>
-
-                    @csrf <!-- CSRF token for security -->
-                    <label class="form-control w-full"> <!-- Label for the email input -->
-                        <div class="label"> <!-- Div to group label text -->
-                            <span class="label-text">Password</span> <!-- Label text for the email field -->
-                        </div>
-                        <x-input-label for="password" :value="__('Password')" />
-
-            <x-text-input id="password" class="block mt-1 w-full"
-                            type="password"
-                            name="password"
-                            required autocomplete="current-password" />
-
-            <x-input-error :messages="$errors->get('password')" class="mt-2" />
-                        <div class="label"> <!-- Div to group error messages -->
-                            @error('email') <!-- Check for validation errors on email -->
-                                <span class="label-text-alt text-error">{{ $message }}</span> <!-- Display the error message if present -->
+                        <input name="password" type="password" placeholder="Password"
+                            class="input input-bordered @error('password') input-error @enderror w-full" type="password"
+                            name="password" required autocomplete="current-password"/>
+                        <div class="label">
+                            @error('password')
+                                <span class="label-text-alt text-error">{{ $message }}</span>
                             @enderror
                         </div>
                     </label>
-
-                      <div class="flex content-center justify-end gap-2"> <!-- Flexbox for aligning buttons and links -->
-                        @if (Route::has('password.request')) <!-- Check if the password reset route exists -->
-                            
-                        @endif
-                        <input type="submit" class="btn btn-primary" value="Email Password Reset Link" /> <!-- Submit button for the login form -->
-                    </div>
-                </form> <!-- End of the form -->
+        <div class="flex justify-end mt-4">
+            <x-primary-button>
+                {{ __('Confirm') }}
+            </x-primary-button>
+        </div>
+    </form>
             </div> <!-- End of card body -->
         </div> <!-- End of card -->
     </div> <!-- End of container -->

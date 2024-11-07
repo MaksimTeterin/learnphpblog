@@ -6,8 +6,12 @@
     <div class="container mx-auto">
         <div class="card bg-base-300 shadow-xl w-1/2 mx-auto">
             <div class="card-body">
-                <form action="{{ route('password.email') }}" method="POST">
+                <form action="{{ route('password.store') }}" method="POST">
                     @csrf
+
+
+                    <input type="hidden" name="token" value="{{ $request->route('token') }}">
+
 
                     <label class="form-control w-full">
                         <div class="label">
@@ -28,7 +32,7 @@
                         <x-text-input id="password" class="input input-bordered @error('password')" type="password" name="password" required autocomplete="new-password" />
                         <div class="label">
                             @error('password')
-                                <span class="label-text-alt text-error">{{ $password }}</span>
+                                <span class="label-text-alt text-error">{{ $message }}</span>
                             @enderror
                         </div>
                     </label>
@@ -40,7 +44,7 @@
                         <x-text-input id="password_confirmation" class="input input-bordered @error('password')" type="password" name="password_confirmation" required autocomplete="new-password" />
                         <div class="label">
                             @error('password_confirmation')
-                                <span class="label-text-alt text-error">{{ $password_confirmation }}</span>
+                                <span class="label-text-alt text-error">{{ $message }}</span>
                             @enderror
                         </div>
                     </label>
