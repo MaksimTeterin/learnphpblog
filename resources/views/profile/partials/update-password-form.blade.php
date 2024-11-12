@@ -1,10 +1,10 @@
-<section>
+<section class="card bg-base-300"> 
     <header>
-        <h2 class="text-lg font-medium text-gray-900">
+        <h2 class="text-lg font-medium text-white-900">
             {{ __('Update Password') }}
         </h2>
 
-        <p class="mt-1 text-sm text-gray-600">
+        <p class="mt-1 text-sm text-white-600">
             {{ __('Ensure your account is using a long, random password to stay secure.') }}
         </p>
     </header>
@@ -13,23 +13,44 @@
         @csrf
         @method('put')
 
-        <div>
-            <x-input-label for="update_password_current_password" :value="__('Current Password')" />
-            <x-text-input id="update_password_current_password" name="current_password" type="password" class="mt-1 block w-full" autocomplete="current-password" />
-            <x-input-error :messages="$errors->updatePassword->get('current_password')" class="mt-2" />
-        </div>
 
-        <div>
-            <x-input-label for="update_password_password" :value="__('New Password')" />
-            <x-text-input id="update_password_password" name="password" type="password" class="mt-1 block w-full" autocomplete="new-password" />
-            <x-input-error :messages="$errors->updatePassword->get('password')" class="mt-2" />
-        </div>
+        <label class="form-control w-full">
+                        <div class="label">
+                            <span class="label-text">Current Password</span>
+                        </div>
+                        <input name="password" id="update_password_current_password" type="password" for="update_password_current_password" placeholder="Password"
+                            class="input input-bordered @error('password') input-error @enderror w-full" required autocomplete="current-password"/>
+                        <div class="label">
+                            @error('updatePassword')
+                                <span class="label-text-alt text-error">{{ $message }}</span>
+                            @enderror
+                        </div>
+                    </label>
 
-        <div>
-            <x-input-label for="update_password_password_confirmation" :value="__('Confirm Password')" />
-            <x-text-input id="update_password_password_confirmation" name="password_confirmation" type="password" class="mt-1 block w-full" autocomplete="new-password" />
-            <x-input-error :messages="$errors->updatePassword->get('password_confirmation')" class="mt-2" />
-        </div>
+                    <label class="form-control w-full">
+                        <div class="label">
+                            <span class="label-text">Update Password</span>
+                        </div>
+                        <input id="update_password_password" name="password" type="password" 
+                            class="input input-bordered @error('password') input-error @enderror w-full" autocomplete="new-password"/>
+                        <div class="label">
+                            @error('updatePassword')
+                                <span class="label-text-alt text-error">{{ $message }}</span>
+                            @enderror
+                        </div>
+                    </label>
+                    <label class="form-control w-full">
+                        <div class="label">
+                            <span class="label-text">Confirm Password</span>
+                        </div>
+                        <input id="update_password_password_confirmation" name="password_confirmation" type="password" 
+                            class="input input-bordered @error('password') input-error @enderror w-full" autocomplete="new-password"/>
+                        <div class="label">
+                            @error('updatePassword')
+                                <span class="label-text-alt text-error">{{ $message }}</span>
+                            @enderror
+                        </div>
+                    </label>
 
         <div class="flex items-center gap-4">
             <x-primary-button>{{ __('Save') }}</x-primary-button>
