@@ -5,15 +5,28 @@ namespace App\Http\Controllers;
 use App\Models\Post;
 use App\Http\Requests\StorePostRequest;
 use App\Http\Requests\UpdatePostRequest;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class PostController extends Controller
 {
+    public function __construct(Request $request)
+    {
+        $post = $request->route()->parameter('post');
+        if($post){
+            if(auth()->user()->id !== $post->user->id){
+                abort(404);
+            }
+        }
+    }
+
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        //
+        $posts = auth()->user()->posts()->latest()->paginate();
+        return view('posts.index', compact('posts'));
     }
 
     /**
@@ -21,7 +34,7 @@ class PostController extends Controller
      */
     public function create()
     {
-        //
+        return view('posts.create');
     }
 
     /**
@@ -29,7 +42,15 @@ class PostController extends Controller
      */
     public function store(StorePostRequest $request)
     {
-        //
+        $post = new Post();
+        $post->title = $request->input('title');
+        $post->body = $request->input('body');
+        $post->user()->associate(auth()->user());
+        if($request->has('image')){
+            $post->image = $request->file('image')->store('', ['disk' => 'public']);
+        }
+        $post->save();
+        return redirect()->route('posts.index');
     }
 
     /**
@@ -37,7 +58,7 @@ class PostController extends Controller
      */
     public function show(Post $post)
     {
-        //
+        return view('posts.show', compact('post'));
     }
 
     /**
@@ -45,7 +66,7 @@ class PostController extends Controller
      */
     public function edit(Post $post)
     {
-        //
+        return view('posts.edit', compact('post'));
     }
 
     /**
@@ -53,7 +74,10 @@ class PostController extends Controller
      */
     public function update(UpdatePostRequest $request, Post $post)
     {
-        //
+        $post->title = $request->input('title');
+        $post->body = $request->input('body');
+        $post->save();
+        return redirect()->route('posts.index');
     }
 
     /**
@@ -61,6 +85,8 @@ class PostController extends Controller
      */
     public function destroy(Post $post)
     {
-        //
+
+        $post->delete();
+        return redirect()->back();
     }
 }

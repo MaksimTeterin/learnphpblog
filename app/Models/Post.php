@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 
 class Post extends Model
 {
@@ -15,9 +16,49 @@ class Post extends Model
     // }
 
     public function snippet(): Attribute {
-        return Attribute::get(fn () => explode("\n\n", $this->original['body'])[0]);
+        return Attribute::get(fn () => explode("\n\n", $this->body)[0]);
     }
-    public function body(): Attribute {
-        return Attribute::get(fn ($value) => nl2br($value));
+    public function displayBody(): Attribute {
+        return Attribute::get(fn () => nl2br($this->body));
+    }
+    public function displayImage(): Attribute {
+        return Attribute::get(function () {
+            if($this->image === null || parse_url($this->image, PHP_URL_SCHEME)){
+                return $this->image;
+            }
+            return Storage::disk('public')->url($this->image);
+        });
+    }
+
+    public function authHasLiked(): Attribute {
+        return Attribute::get(function (){
+            if(!auth()->check()){
+                return false;
+            }
+            return $this->likes()->where('user_id', auth()->user()->id)->exists();
+        });
+    }
+
+    public function user(){
+        return $this->belongsTo(User::class);
+    }
+
+    public function comments(){
+        return $this->hasMany(Comment::class);
+    }
+
+    public function likes(){
+        return $this->hasMany(Like::class);
+    }
+
+    public function tags(){
+        return $this->belongsToMany(Tag::class);
+    }
+
+    protected static function booted(): void
+    {
+        static::deleting(function (Post $post) {
+            Storage::disk('public')->delete($post->image);
+        });
     }
 }
