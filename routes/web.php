@@ -4,11 +4,16 @@ use App\Http\Controllers\PostController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PublicController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\TagController;
+use App\Http\Controllers\CommentController;
+
+
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [PublicController::class, 'index'])->name('home');
 Route::get('/post/{post}', [PublicController::class, 'post'])->name('post');
 Route::get('/tag/{tag}', [PublicController::class, 'tag'])->name('tag');
+Route::get('/comment/{comment}', [PublicController::class, 'comment'])->name('comment');
 
 // Route::get('/admin/posts', [PostController::class, 'index'])->name('posts.index');
 // Route::get('/admin/posts/create', [PostController::class, 'create'])->name('posts.create');
@@ -25,6 +30,10 @@ Route::get('/dashboard', function () {
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
+    Route::resource('/admin/comments', CommentController::class);
+    Route::resource('/admin/tags', TagController::class);
+
+
     Route::resource('/admin/posts', PostController::class);
     Route::resource('/admin/users', UserController::class);
     Route::post('/post/{post}/like', [PublicController::class, 'like'])->name('like');
@@ -39,6 +48,10 @@ Route::middleware('auth')->group(function () {
     
     Route::get('/admin/user/{user}', [UserController::class, 'user'])->name('user');
 
+
+    Route::get('/tags', [TagController::class, 'index'])->name('tags.index');
+    Route::get('/tags/create', [TagController::class, 'create'])->name('tags.create');
+    Route::post('/tags', [TagController::class, 'store'])->name('tags.store');
 
 
 });
